@@ -1,1 +1,170 @@
-﻿/* Styles composants */
+﻿/* Sliders modernes */
+.slider {
+    background: linear-gradient(to right, #374151 0%, #374151 100%);
+    outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+    appearance: none;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+    cursor: pointer;
+    border: 2px solid #1f2937;
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+    transition: all 0.2s ease;
+}
+
+.slider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5);
+}
+
+.slider::-moz-range-thumb {
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+    cursor: pointer;
+    border: 2px solid #1f2937;
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+}
+
+/* Checkboxes modernes */
+input[type="checkbox"]:checked {
+    background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+    border-color: #0ea5e9;
+}
+
+/* Select modernes */
+select.input-modern {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+}
+
+/* Animations de notification */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.notification-enter {
+    animation: slideInRight 0.3s ease-out;
+}
+
+.notification-exit {
+    animation: slideOutRight 0.3s ease-in;
+}
+
+/* Loading states */
+.loading-skeleton {
+    background: linear-gradient(90deg,
+    #1f2937 25%,
+    #374151 50%,
+    #1f2937 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+/* Responsive grid fixes */
+@media (max-width: 768px) {
+    .grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+
+    .grid-cols-1.md\:grid-cols-2.lg\:grid-cols-3 {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid-cols-1.md\:grid-cols-2.lg\:grid-cols-3 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Drag and drop zones */
+.drop-zone {
+    transition: all 0.3s ease;
+}
+
+.drop-zone.drag-over {
+    background: rgba(14, 165, 233, 0.1);
+    border-color: #0ea5e9;
+    transform: scale(1.02);
+}
+
+/* File type indicators */
+.file-type-video {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+
+.file-type-image {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+/* Status indicators with animation */
+.status-indicator {
+    position: relative;
+}
+
+.status-indicator::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    animation: pulse-ring 2s infinite;
+}
+
+@keyframes pulse-ring {
+    0% {
+        box-shadow: 0 0 0 0 currentColor;
+        opacity: 1;
+    }
+    100% {
+        box-shadow: 0 0 0 10px currentColor;
+        opacity: 0;
+    }
+}
+
+/* Progress bars avec gradient animé */
+.progress-fill {
+    background: linear-gradient(90deg, #0ea5e9, #3b82f6, #8b5cf6);
+    background-size: 200% 100%;
+    animation: gradient-shift 2s ease infinite;
+}
+
+@keyframes gradient-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}

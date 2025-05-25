@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "main": "public/electron.js",
+  "main": "public/electron.cjs",
   "homepage": "./",
   "scripts": {
     "dev": "vite",
@@ -16,15 +16,28 @@
     "dist": "npm run build && electron-builder --publish=never"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.14",
+    "@radix-ui/react-progress": "^1.1.7",
+    "@radix-ui/react-select": "^2.2.5",
+    "@radix-ui/react-slider": "^1.3.5",
+    "@radix-ui/react-switch": "^1.2.5",
+    "@tailwindcss/vite": "^4.1.7",
     "axios": "^1.9.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.12.2",
+    "lucide-react": "^0.511.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "tailwind-merge": "^3.3.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
+    "@tailwindcss/forms": "^0.5.10",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react": "^4.4.1",
+    "autoprefixer": "^10.4.21",
     "concurrently": "^9.1.2",
     "cross-env": "^7.0.3",
     "electron": "^36.3.1",
@@ -34,6 +47,8 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.7",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.30.1",
     "vite": "^6.3.5",

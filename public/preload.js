@@ -5,7 +5,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   minimize: () => ipcRenderer.invoke('minimize-window'),
   maximize: () => ipcRenderer.invoke('maximize-window'),
   close: () => ipcRenderer.invoke('close-window'),
-  
+
   // API pour les fichiers
   selectFiles: () => ipcRenderer.invoke('select-files'),
   selectFolder: () => ipcRenderer.invoke('select-folder'),
