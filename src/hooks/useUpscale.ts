@@ -1,0 +1,1 @@
+﻿// Hook pour l'upscaling
