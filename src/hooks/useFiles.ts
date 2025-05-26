@@ -8,6 +8,7 @@ interface UseFilesResult {
     isLoading: boolean;
     error: string | null;
     selectFiles: () => Promise<void>;
+    addFiles: () => Promise<void>; // NOUVELLE FONCTION
     removeFile: (filePath: string) => void;
     clearFiles: () => void;
     validateFiles: (filePaths: string[]) => Promise<void>;
@@ -25,15 +26,13 @@ export const useFiles = (): UseFilesResult => {
             setIsLoading(true);
             setError(null);
 
-            // Utiliser Electron pour sélectionner les fichiers
             const filePaths = await electronService.selectFiles();
-
             if (filePaths.length === 0) {
                 setIsLoading(false);
                 return;
             }
 
-            // Valider les fichiers via l'API
+            // REMPLACER les fichiers existants
             await validateFiles(filePaths);
         } catch (err: any) {
             setError(err.message || 'Erreur lors de la sélection des fichiers');
@@ -41,6 +40,46 @@ export const useFiles = (): UseFilesResult => {
             setIsLoading(false);
         }
     }, []);
+
+    const addFiles = useCallback(async (): Promise<void> => {
+        try {
+            setIsLoading(true);
+            setError(null);
+
+            const filePaths = await electronService.selectFiles();
+            if (filePaths.length === 0) {
+                setIsLoading(false);
+                return;
+            }
+
+            // AJOUTER aux fichiers existants
+            const existingPaths = selectedFiles.map(f => f.file_path);
+            const newPaths = filePaths.filter(path => !existingPaths.includes(path));
+
+            if (newPaths.length === 0) {
+                setError('Ces fichiers sont déjà sélectionnés');
+                setIsLoading(false);
+                return;
+            }
+
+            const validation: FileValidationResponse = await apiService.validateFiles(newPaths);
+
+            if (validation.invalid_files.length > 0) {
+                console.warn('Fichiers invalides:', validation.invalid_files);
+            }
+
+            // Ajouter les nouveaux fichiers valides
+            setSelectedFiles(prev => [...prev, ...validation.valid_files]);
+
+            if (validation.valid_files.length === 0) {
+                setError('Aucun nouveau fichier valide trouvé');
+            }
+        } catch (err: any) {
+            setError(err.message || 'Erreur lors de l\'ajout des fichiers');
+        } finally {
+            setIsLoading(false);
+        }
+    }, [selectedFiles]);
 
     const validateFiles = useCallback(async (filePaths: string[]): Promise<void> => {
         try {
@@ -96,6 +135,7 @@ export const useFiles = (): UseFilesResult => {
         isLoading,
         error,
         selectFiles,
+        addFiles, // EXPOSER la nouvelle fonction
         removeFile,
         clearFiles,
         validateFiles,

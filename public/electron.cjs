@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const { spawn } = require('child_process');
 const path = require('path');
 const isDev = require('electron-is-dev');
+const fs = require('fs'); // AJOUTER ÇA
 
 let mainWindow;
 let pythonProcess;
@@ -17,14 +18,13 @@ function createWindow() {
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.cjs')
     },
-    // Fenêtre native Windows avec barre de titre
     frame: true,
     titleBarStyle: 'default',
     show: false,
     backgroundColor: '#000000'
   });
 
-  // IPC Handlers
+  // IPC Handlers EXISTANTS
   ipcMain.handle('select-files', async () => {
     const result = await dialog.showOpenDialog(mainWindow, {
       properties: ['openFile', 'multiSelections'],
@@ -42,6 +42,47 @@ function createWindow() {
       properties: ['openDirectory']
     });
     return result.canceled ? '' : result.filePaths[0];
+  });
+
+  // NOUVEAUX HANDLERS pour les fichiers
+  ipcMain.handle('read-file-base64', async (event, filePath) => {
+    try {
+      console.log('🔍 [Electron] Lecture fichier:', filePath);
+
+      const cleanPath = path.resolve(filePath);
+
+      if (!fs.existsSync(cleanPath)) {
+        console.error('❌ [Electron] Fichier non trouvé:', cleanPath);
+        return null;
+      }
+
+      const buffer = fs.readFileSync(cleanPath);
+      const base64 = buffer.toString('base64');
+
+      console.log('✅ [Electron] Fichier lu en base64, taille:', base64.length);
+      return base64;
+
+    } catch (error) {
+      console.error('❌ [Electron] Erreur lecture fichier:', error);
+      return null;
+    }
+  });
+
+  ipcMain.handle('get-file-info', async (event, filePath) => {
+    try {
+      const cleanPath = path.resolve(filePath);
+      const stats = fs.statSync(cleanPath);
+      return {
+        exists: true,
+        size: stats.size,
+        isFile: stats.isFile(),
+        isDirectory: stats.isDirectory(),
+        modified: stats.mtime,
+        absolutePath: cleanPath
+      };
+    } catch (error) {
+      return { exists: false, error: error.message };
+    }
   });
 
   const startUrl = isDev ? 'http://localhost:5173' : `file://${path.join(__dirname, '../dist/index.html')}`;
