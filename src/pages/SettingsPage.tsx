@@ -129,27 +129,7 @@ const SettingsPage: React.FC = () => {
     };
 
     const settingSections = [
-        {
-            title: 'Apparence',
-            icon: <Palette className="text-pink-400" size={24} />,
-            settings: [
-                {
-                    key: 'theme',
-                    label: 'Thème',
-                    description: 'Choisissez le thème de l\'interface',
-                    component: (
-                        <select
-                            value={settings.theme}
-                            onChange={(e) => updateSetting('theme', e.target.value)}
-                            className="input-modern w-32"
-                        >
-                            <option value="dark">Sombre</option>
-                            <option value="light">Clair</option>
-                        </select>
-                    )
-                }
-            ]
-        },
+
         {
             title: 'Intelligence Artificielle',
             icon: <Zap className="text-yellow-400" size={24} />,
@@ -162,7 +142,7 @@ const SettingsPage: React.FC = () => {
                         <select
                             value={settings.defaultAIModel}
                             onChange={(e) => updateSetting('defaultAIModel', e.target.value)}
-                            className="input-modern w-48"
+                            className="input-modern w-48 bg-black font-light"
                         >
                             {systemInfo?.available_models?.map((model: string) => (
                                 <option key={model} value={model}>{model}</option>
@@ -301,22 +281,7 @@ const SettingsPage: React.FC = () => {
                         </label>
                     )
                 },
-                {
-                    key: 'autoUpdate',
-                    label: 'Mises à jour automatiques',
-                    description: 'Installer automatiquement les nouvelles versions',
-                    component: (
-                        <label className="flex items-center space-x-2 cursor-pointer">
-                            <input
-                                type="checkbox"
-                                checked={settings.autoUpdate}
-                                onChange={(e) => updateSetting('autoUpdate', e.target.checked)}
-                                className="w-4 h-4 text-sky-500 bg-gray-700 border-gray-600 rounded focus:ring-sky-500"
-                            />
-                            <span className="text-sm text-gray-300">Activé</span>
-                        </label>
-                    )
-                }
+
             ]
         }
     ];
@@ -457,65 +422,11 @@ const SettingsPage: React.FC = () => {
                         </div>
 
                         <div className="glass-effect rounded-lg p-4">
-                            <div className="text-gray-400 text-sm mb-1">Utilisateur</div>
-                            <div className="text-white font-semibold">theTigerFox</div>
+                            <div className="text-gray-400 text-sm mb-1">Concepteur</div>
+                            <div className="text-white font-semibold">The Fox</div>
                         </div>
 
-                        <div className="glass-effect rounded-lg p-4">
-                            <div className="text-gray-400 text-sm mb-1">Dernière connexion</div>
-                            <div className="text-white font-semibold">25/05/2025 18:37</div>
-                        </div>
-                    </div>
-                </motion.div>
 
-                {/* Actions de maintenance */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 }}
-                    className="card-modern"
-                >
-                    <h2 className="text-xl font-semibold text-white mb-6 flex items-center space-x-3">
-                        <Shield className="text-red-400" size={24} />
-                        <span>Maintenance</span>
-                    </h2>
-
-                    <div className="space-y-4">
-                        <div className="flex items-center justify-between p-4 bg-gray-800 rounded-lg">
-                            <div>
-                                <div className="text-white font-medium">Nettoyer les fichiers temporaires</div>
-                                <div className="text-sm text-gray-400">Libère l'espace disque en supprimant les fichiers temporaires</div>
-                            </div>
-                            <button
-                                onClick={cleanupTempFiles}
-                                className="btn-secondary flex items-center space-x-2"
-                            >
-                                <Trash2 size={16} />
-                                <span>Nettoyer</span>
-                            </button>
-                        </div>
-
-                        <div className="flex items-center justify-between p-4 bg-gray-800 rounded-lg">
-                            <div>
-                                <div className="text-white font-medium">Vérifier les mises à jour</div>
-                                <div className="text-sm text-gray-400">Rechercher et installer les dernières mises à jour</div>
-                            </div>
-                            <button className="btn-secondary flex items-center space-x-2">
-                                <ExternalLink size={16} />
-                                <span>Vérifier</span>
-                            </button>
-                        </div>
-
-                        <div className="flex items-center justify-between p-4 bg-gray-800 rounded-lg">
-                            <div>
-                                <div className="text-white font-medium">Journaux de débogage</div>
-                                <div className="text-sm text-gray-400">Accéder aux logs pour le dépannage</div>
-                            </div>
-                            <button className="btn-secondary flex items-center space-x-2">
-                                <Info size={16} />
-                                <span>Ouvrir</span>
-                            </button>
-                        </div>
                     </div>
                 </motion.div>
             </div>

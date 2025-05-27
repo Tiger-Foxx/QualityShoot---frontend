@@ -8,6 +8,7 @@ interface UseFilesResult {
     isLoading: boolean;
     error: string | null;
     selectFiles: () => Promise<void>;
+    selectFilesVideo: () => Promise<void>;
     addFiles: () => Promise<void>; // NOUVELLE FONCTION
     removeFile: (filePath: string) => void;
     clearFiles: () => void;
@@ -27,6 +28,25 @@ export const useFiles = (): UseFilesResult => {
             setError(null);
 
             const filePaths = await electronService.selectFiles();
+            if (filePaths.length === 0) {
+                setIsLoading(false);
+                return;
+            }
+
+            // REMPLACER les fichiers existants
+            await validateFiles(filePaths);
+        } catch (err: any) {
+            setError(err.message || 'Erreur lors de la sélection des fichiers');
+        } finally {
+            setIsLoading(false);
+        }
+    }, []);
+    const selectFilesVideo = useCallback(async (): Promise<void> => {
+        try {
+            setIsLoading(true);
+            setError(null);
+
+            const filePaths = await electronService.selectFilesVideo();
             if (filePaths.length === 0) {
                 setIsLoading(false);
                 return;

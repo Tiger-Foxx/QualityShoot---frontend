@@ -76,7 +76,7 @@ const EnhancementSettings: React.FC<EnhancementSettingsProps> = ({
     const [customSettings, setCustomSettings] = useState({
         ai_model: AIModel.REALESR_GX4,
         input_resize_factor: 1.0,
-        output_resize_factor: 1.2,
+        output_resize_factor: 1.1,
         vram_limit: 4.0,
         multithreading: 1,
         output_path: undefined as string | undefined
@@ -280,17 +280,17 @@ const EnhancementSettings: React.FC<EnhancementSettingsProps> = ({
                             </label>
                             <input
                                 type="range"
-                                min="0.5"
-                                max="2.0"
-                                step="0.1"
+                                min="0.1"
+                                max="4.0"
+                                step="0.01"
                                 value={customSettings.output_resize_factor}
                                 onChange={(e) => handleCustomChange('output_resize_factor', parseFloat(e.target.value))}
                                 disabled={isProcessing}
                                 className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer slider"
                             />
                             <div className="flex justify-between text-xs text-gray-400 mt-2">
-                                <span>0.5x smaller</span>
-                                <span>2x larger</span>
+                                <span>0.1x smaller</span>
+                                <span>4x larger</span>
                             </div>
                         </div>
 

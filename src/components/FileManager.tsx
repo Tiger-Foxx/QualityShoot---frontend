@@ -87,6 +87,7 @@ const FileManager: React.FC<FileManagerProps> = ({
                         <Plus size={14} />
                     </button>
                 </div>
+
             </div>
 
             {/* Files List */}

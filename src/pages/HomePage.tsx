@@ -16,39 +16,6 @@ interface StatCardProps {
     isLoading?: boolean;
 }
 
-const StatCard: React.FC<StatCardProps> = ({
-                                               icon, title, value, description, color, trend, isLoading
-                                           }) => (
-    <div className="group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-gray-600/50 transition-all duration-300 hover:transform hover:scale-105">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-purple-600/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-        <div className="relative z-10">
-            <div className="flex items-center justify-between mb-4">
-                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center shadow-lg`}>
-                    {icon}
-                </div>
-                {trend && (
-                    <div className="text-green-400 text-sm font-medium flex items-center space-x-1">
-                        <TrendingUp size={14} />
-                        <span>{trend}</span>
-                    </div>
-                )}
-            </div>
-
-            <div className="space-y-2">
-                <p className="text-gray-400 text-sm font-medium">{title}</p>
-                <p className="text-white text-2xl font-bold">
-                    {isLoading ? (
-                        <div className="w-16 h-6 bg-gray-700 rounded animate-pulse" />
-                    ) : (
-                        value
-                    )}
-                </p>
-                <p className="text-gray-500 text-xs">{description}</p>
-            </div>
-        </div>
-    </div>
-);
 
 interface ModelCardProps {
     name: string;
@@ -168,7 +135,7 @@ const HomePage: React.FC = () => {
                                         </div>
                                         <div>
                                             <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent">
-                                                Welcome back, theTigerFox!
+                                                Welcome back !
                                             </h1>
                                             <p className="text-gray-400 text-lg">Ready to enhance your content with AI</p>
                                         </div>
@@ -245,49 +212,10 @@ const HomePage: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Stats Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <StatCard
-                            icon={<Cpu className="text-white" size={24} />}
-                            title="AI Models"
-                            value={systemHealth?.models_count || 0}
-                            description="Ready for enhancement"
-                            color="from-blue-500 to-blue-600"
-                            trend="+100%"
-                            isLoading={loading}
-                        />
 
-                        <StatCard
-                            icon={<Image className="text-white" size={24} />}
-                            title="Supported Formats"
-                            value="12+"
-                            description="Images & videos"
-                            color="from-green-500 to-green-600"
-                            isLoading={loading}
-                        />
-
-                        <StatCard
-                            icon={<Zap className="text-white" size={24} />}
-                            title="Processing Speed"
-                            value="4x"
-                            description="Faster than competitors"
-                            color="from-yellow-500 to-orange-500"
-                            trend="+250%"
-                            isLoading={loading}
-                        />
-
-                        <StatCard
-                            icon={<HardDrive className="text-white" size={24} />}
-                            title="System Status"
-                            value={serverConnected ? "Optimal" : "Offline"}
-                            description="All systems operational"
-                            color={serverConnected ? "from-green-500 to-emerald-500" : "from-red-500 to-red-600"}
-                            isLoading={loading}
-                        />
-                    </div>
 
                     {/* AI Models Section */}
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
 
                         {/* Models Grid */}
                         <div className="lg:col-span-2 space-y-6">
@@ -317,57 +245,9 @@ const HomePage: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Quick Actions */}
-                        <div className="space-y-6">
-                            <h3 className="text-xl font-bold text-white flex items-center space-x-2">
-                                <Zap className="text-yellow-400" size={20} />
-                                <span>Quick Actions</span>
-                            </h3>
 
-                            <div className="space-y-4">
-                                {[
-                                    { icon: Image, title: 'Enhance Images', desc: 'Upscale photos with AI', color: 'from-blue-500 to-blue-600' },
-                                    { icon: Video, title: 'Process Videos', desc: 'Coming soon', color: 'from-purple-500 to-purple-600' },
-                                    { icon: Download, title: 'Batch Processing', desc: 'Multiple files at once', color: 'from-green-500 to-green-600' },
-                                    { icon: Settings, title: 'Configure AI', desc: 'Adjust model settings', color: 'from-orange-500 to-red-500' }
-                                ].map((action, index) => (
-                                    <button
-                                        key={index}
-                                        className="w-full bg-gradient-to-br from-gray-800/50 to-gray-900/50 hover:from-gray-700/50 hover:to-gray-800/50 rounded-xl p-4 border border-gray-700/50 hover:border-gray-600/50 transition-all duration-300 text-left group"
-                                    >
-                                        <div className="flex items-center space-x-4">
-                                            <div className={`w-10 h-10 bg-gradient-to-br ${action.color} rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                                                <action.icon className="text-white" size={20} />
-                                            </div>
-                                            <div className="flex-1">
-                                                <h4 className="text-white font-medium">{action.title}</h4>
-                                                <p className="text-gray-400 text-sm">{action.desc}</p>
-                                            </div>
-                                            <ChevronRight className="text-gray-400 group-hover:text-white transition-colors" size={18} />
-                                        </div>
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
                     </div>
 
-                    {/* Footer Stats */}
-                    <div className="bg-gradient-to-r from-gray-800/30 to-gray-900/30 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/30">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                            <div className="space-y-2">
-                                <div className="text-3xl font-bold text-white">99.9%</div>
-                                <div className="text-gray-400 text-sm">Uptime Reliability</div>
-                            </div>
-                            <div className="space-y-2">
-                                <div className="text-3xl font-bold text-white">1M+</div>
-                                <div className="text-gray-400 text-sm">Images Enhanced</div>
-                            </div>
-                            <div className="space-y-2">
-                                <div className="text-3xl font-bold text-white">4K</div>
-                                <div className="text-gray-400 text-sm">Max Resolution</div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

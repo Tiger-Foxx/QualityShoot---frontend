@@ -21,7 +21,9 @@ function createWindow() {
     frame: true,
     titleBarStyle: 'default',
     show: false,
-    backgroundColor: '#000000'
+    backgroundColor: '#000000',
+    icon:'logo.png',
+
   });
 
   // IPC Handlers EXISTANTS
@@ -29,9 +31,8 @@ function createWindow() {
     const result = await dialog.showOpenDialog(mainWindow, {
       properties: ['openFile', 'multiSelections'],
       filters: [
-        { name: 'Images', extensions: ['jpg', 'jpeg', 'png', 'bmp', 'tiff', 'webp'] },
-        { name: 'Vidéos', extensions: ['mp4', 'mkv', 'avi', 'mov', 'webm'] },
-        { name: 'Tous', extensions: ['*'] }
+        { name: 'Images/videos', extensions: ['jpg', 'jpeg', 'png', 'bmp', 'tiff', 'webp','mp4', 'mkv', 'avi', 'mov', 'webm'] },
+
       ]
     });
     return result.canceled ? [] : result.filePaths;

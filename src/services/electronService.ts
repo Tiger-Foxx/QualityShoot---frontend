@@ -33,7 +33,33 @@ class ElectronService {
             const input = document.createElement('input');
             input.type = 'file';
             input.multiple = true;
-            input.accept = 'image/*,video/*';
+            input.accept = '*';
+
+            input.onchange = () => {
+                const files = Array.from(input.files || []);
+                const filePaths = files.map(file => URL.createObjectURL(file));
+                resolve(filePaths);
+            };
+
+            input.click();
+        });
+    }
+    async selectFilesVideo(): Promise<string[]> {
+        if (this.isElectron() && window.electronAPI) {
+            try {
+                return await window.electronAPI.selectFiles();
+            } catch (error) {
+                console.error('Erreur sélection fichiers:', error);
+                return [];
+            }
+        }
+
+        // Fallback pour le navigateur web
+        return new Promise((resolve) => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.multiple = true;
+            input.accept = '*';
 
             input.onchange = () => {
                 const files = Array.from(input.files || []);

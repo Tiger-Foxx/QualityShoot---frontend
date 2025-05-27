@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Home, Zap, Settings, Minimize2, Square, X } from 'lucide-react';
+import { Home, Zap, Settings } from 'lucide-react';
 import HomePage from './pages/HomePage';
 import UpscalePage from './pages/UpscalePage';
 import SettingsPage from './pages/SettingsPage';
@@ -7,7 +7,7 @@ import SettingsPage from './pages/SettingsPage';
 type PageType = 'home' | 'upscale' | 'settings';
 
 function App() {
-    const [currentPage, setCurrentPage] = useState<PageType>('upscale');
+     const [currentPage, setCurrentPage] = useState<PageType>('home');
 
     const menuItems = [
         { id: 'home', label: 'Home', icon: Home, page: 'home' as PageType },
@@ -65,12 +65,6 @@ function App() {
                     </div>
                 </nav>
 
-                {/* User Avatar */}
-                <div className="h-16 border-t border-gray-700 flex items-center justify-center">
-                    <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-blue-500 rounded-full flex items-center justify-center text-xs font-bold">
-                        TF
-                    </div>
-                </div>
             </div>
 
             {/* Main Content */}
