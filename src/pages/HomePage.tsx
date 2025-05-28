@@ -100,10 +100,10 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
     };
 
     const aiModels = [
-        { name: 'RealESR_Gx4', description: 'Best for realistic photos and detailed images', scale: '4x', available: true, performance: 'Medium' as const },
-        { name: 'RealESR_Animex4', description: 'Specialized for anime and illustrations', scale: '4x', available: true, performance: 'Medium' as const },
-        { name: 'BSRGANx4', description: 'Balanced quality for various content types', scale: '4x', available: true, performance: 'Fast' as const },
-        { name: 'RealESRGANx4', description: 'Classic ESRGAN model with good results', scale: '4x', available: false, performance: 'Slow' as const },
+        {display_name:"Fox_REAL", name: 'RealESR_Gx4', description: 'Best for realistic photos and detailed images', scale: '4x', available: true, performance: 'Medium' as const },
+        {display_name:"Fox_ANIMEX4", name: 'RealESR_Animex4', description: 'Specialized for anime and illustrations', scale: '4x', available: true, performance: 'Medium' as const },
+        { display_name:"Fox_BALANCEX2",name: 'BSRGANx4', description: 'Balanced quality for various content types', scale: '4x', available: true, performance: 'Fast' as const },
+        { display_name:"FOX x4",name: 'RealESRGANx4', description: 'Classic ESRGAN model with good results', scale: '4x', available: false, performance: 'Slow' as const },
     ];
 
     if (loading) {
@@ -175,7 +175,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                                         <span>Start Enhancing</span>
                                     </button>
                                     <button
-                                        onClick={() => onNavigate('upscale')}
+                                        onClick={() => onNavigate('settings')}
                                         className="bg-gray-700/50 hover:bg-gray-600/50 text-white px-6 py-3 rounded-xl font-semibold flex items-center space-x-2 transition-all border border-gray-600/50">
                                         <Settings size={18} />
                                         <span>Settings</span>
@@ -246,7 +246,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                                 {aiModels.map((model) => (
                                     <ModelCard
                                         key={model.name}
-                                        name={model.name}
+                                        name={model.display_name}
                                         description={model.description}
                                         scale={model.scale}
                                         isAvailable={model.available}

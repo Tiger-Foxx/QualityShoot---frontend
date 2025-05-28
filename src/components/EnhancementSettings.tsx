@@ -47,42 +47,48 @@ const AI_MODELS = {
         description: "Best for photos and realistic images",
         scale: 4,
         quality: "High",
-        speed: "Medium"
+        speed: "Medium",
+        display_name:"Fox_REAL",
     },
     [AIModel.REALESR_ANIMEX4]: {
         name: "RealESRGAN Anime x4",
         description: "Specialized for anime and illustrations",
         scale: 4,
         quality: "High",
-        speed: "Medium"
+        speed: "Medium",
+        display_name:"Fox_ANIMEX4",
     },
     [AIModel.BSRGANX2]: {
         name: "BSRGAN x2",
         description: "Good balance for various content types",
         scale: 2,
         quality: "Medium",
-        speed: "Fast"
+        speed: "Fast",
+        display_name:"Fox_BALANCEX2",
     },
     [AIModel.BSRGANX4]: {
         name: "BSRGAN x4",
         description: "Good balance for various content types",
         scale: 4,
         quality: "Medium",
-        speed: "Fast"
+        speed: "Fast",
+        display_name:"FOX x4"
     },
     [AIModel.IRCNN_LX1]: {
         name: "IRCNN_LX1",
-        description: "Good balance",
+        description: "Good balance x1",
         scale: 1,
         quality: "Medium",
-        speed: "Fast"
+        speed: "Fast",
+        display_name:"Fox_LX1",
     },
     [AIModel.IRCNN_MX1]: {
         name: "IRCNN_MX1",
-        description: "Good balance",
+        description: "Good balance medium x1",
         scale: 1,
         quality: "Medium",
-        speed: "Fast"
+        speed: "Fast",
+        display_name:"Fox_MX1",
     }
 };
 
@@ -284,11 +290,12 @@ const EnhancementSettings: React.FC<EnhancementSettingsProps> = ({
                                 value={customSettings.ai_model}
                                 onChange={(e) => handleCustomChange('ai_model', e.target.value)}
                                 disabled={isProcessing}
-                                className="w-full bg-[#2d2d2d] border border-gray-600 rounded-lg px-4 py-3 text-white text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+
+                                className="w-full bg-[#2d2d2d]  border border-gray-600 rounded-lg px-4 py-3 text-white text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none "
                             >
                                 {Object.entries(AI_MODELS).map(([key, model]) => (
                                     <option key={key} value={key}>
-                                        {model.name} - {model.description}
+                                        {model.display_name} - {model.description}
                                     </option>
                                 ))}
                             </select>
