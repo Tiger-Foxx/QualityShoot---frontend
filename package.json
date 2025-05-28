@@ -39,7 +39,9 @@
     "electron-build": "npm run build && electron-builder",
     "dist": "npm run build && electron-builder --publish=never"
   },
-  "files": ["src/assets/**"],
+  "files": [
+    "src/assets/**"
+  ],
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-progress": "^1.1.7",
@@ -51,9 +53,11 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.12.2",
+    "fs": "^0.0.1-security",
     "lottie": "^0.0.1",
     "lottie-react": "^2.4.1",
     "lucide-react": "^0.511.0",
+    "path": "^0.12.7",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "tailwind-merge": "^3.3.0"

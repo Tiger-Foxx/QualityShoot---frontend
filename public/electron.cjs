@@ -2,7 +2,8 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const { spawn } = require('child_process');
 const path = require('path'); // Assurez-vous que path est importé
-const isDev = require('electron-is-dev');
+const isDev = !app.isPackaged;
+
 const fs = require('fs');
 const { shell } = require('electron');
 
@@ -103,6 +104,7 @@ function createWindow() {
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
   });
+
 
   // Pour la prod, lance le backend seulement si on n'est PAS en dev :
   if (!isDev) {
