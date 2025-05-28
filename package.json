@@ -4,6 +4,28 @@
   "version": "0.0.0",
   "type": "module",
   "main": "public/electron.cjs",
+  "build": {
+    "appId": "com.tigerfox.qualityshoot",
+    "productName": "QualityShoot",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "dist/**",
+      "public/**",
+      "src/assets/**"
+    ],
+    "extraResources": [
+      {
+        "from": "../backend-dist",
+        "to": "backend"
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "src/assets/logo.png"
+    }
+  },
   "homepage": "./",
   "scripts": {
     "dev": "vite",
@@ -15,6 +37,7 @@
     "electron-build": "npm run build && electron-builder",
     "dist": "npm run build && electron-builder --publish=never"
   },
+  "files": ["src/assets/**"],
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-progress": "^1.1.7",

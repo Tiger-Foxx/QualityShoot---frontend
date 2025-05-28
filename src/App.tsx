@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Home, Zap, Settings as SettingsIcon } from 'lucide-react'; // Renommé Settings pour éviter conflit
+import {Home, Zap, Settings as SettingsIcon, Image} from 'lucide-react'; // Renommé Settings pour éviter conflit
 import HomePage from './pages/HomePage';
 import UpscalePage from './pages/UpscalePage';
 import SettingsPage from './pages/SettingsPage';
+import logo from './assets/logo.png';
+
 
 // Exportez PageType pour que HomePage puisse l'utiliser
 export type PageType = 'home' | 'upscale' | 'settings';
@@ -37,8 +39,8 @@ function App() {
             <div className="w-16 bg-[#2d2d2d] border-r border-gray-700 flex flex-col">
                 {/* App Logo */}
                 <div className="h-16 flex items-center justify-center border-b border-gray-700">
-                    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                        <Zap className="text-white" size={18} />
+                    <div className="w-8 h-8    flex items-center justify-center">
+                        <img src={logo} className="w-full"/>
                     </div>
                 </div>
 
