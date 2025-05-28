@@ -202,7 +202,6 @@ const UpscalePage: React.FC = () => {
                                     </div>
                                     <div className="text-white">
                                         <div className="font-bold text-lg">Processing...</div>
-                                        <div className="text-gray-300 text-sm">{Math.round(progress)}% complete</div>
                                     </div>
                                 </div>
                             </div>

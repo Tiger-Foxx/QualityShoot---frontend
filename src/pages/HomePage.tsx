@@ -198,7 +198,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
 
                                     <div className="relative aspect-video bg-gray-800 rounded-xl overflow-hidden border border-gray-600/50">
                                         <img
-                                            src="/assets/beforeafter.png"
+                                            src="./beforeafter.png"
                                             alt="Before/After comparison"
                                             className="w-full h-full object-cover"
                                         />

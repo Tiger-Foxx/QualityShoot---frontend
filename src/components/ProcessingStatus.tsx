@@ -79,7 +79,7 @@ const ProcessingStatus: React.FC<ProcessingStatusProps> = ({
                 <div className="flex items-center justify-center mb-5 min-h-[80px]">
                     {isProcessing ? (
                         <div className="w-20 h-20">
-                            <Lottie animationData={"/assets/lotties/fox-loader.json"} loop={true} />
+                            <Lottie animationData={"./fox-loader.json"} loop={true} />
                         </div>
                     ) : (
                         getStatusIcon(currentProcess.status)
@@ -109,16 +109,16 @@ const ProcessingStatus: React.FC<ProcessingStatusProps> = ({
                 {/* Stats */}
                 <div className="grid grid-cols-3 gap-3 mb-4 text-center">
                     <div className="bg-[#303030] rounded-lg p-2">
-                        <div className="text-green-400 font-bold text-lg">{currentProcess.completed_files.length}</div>
+                        <div className="text-green-400 font-bold text-lg">{(currentProcess.completed_files || []).length}</div>
                         <div className="text-xs text-gray-400">Terminés</div>
                     </div>
                     <div className="bg-[#303030] rounded-lg p-2">
-                        <div className="text-red-400 font-bold text-lg">{currentProcess.failed_files.length}</div>
+                        <div className="text-red-400 font-bold text-lg">{(currentProcess.failed_files || []).length}</div>
                         <div className="text-xs text-gray-400">Échoués</div>
                     </div>
                     <div className="bg-[#303030] rounded-lg p-2">
                         <div className="text-blue-400 font-bold text-lg">
-                            {(currentProcess.completed_files.length + currentProcess.failed_files.length)}
+                            {((currentProcess.completed_files || []).length + (currentProcess.failed_files || []).length)}
                         </div>
                         <div className="text-xs text-gray-400">Traités</div>
                     </div>

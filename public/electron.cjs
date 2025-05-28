@@ -104,7 +104,9 @@ function createWindow() {
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
   });
-
+  // mainWindow.webContents.on('devtools-opened', () => {
+  //   if (!isDev) mainWindow.webContents.closeDevTools();
+  // });
 
   // Pour la prod, lance le backend seulement si on n'est PAS en dev :
   if (!isDev) {
