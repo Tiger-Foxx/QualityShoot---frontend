@@ -56,10 +56,31 @@ const AI_MODELS = {
         quality: "High",
         speed: "Medium"
     },
+    [AIModel.BSRGANX2]: {
+        name: "BSRGAN x2",
+        description: "Good balance for various content types",
+        scale: 2,
+        quality: "Medium",
+        speed: "Fast"
+    },
     [AIModel.BSRGANX4]: {
         name: "BSRGAN x4",
         description: "Good balance for various content types",
         scale: 4,
+        quality: "Medium",
+        speed: "Fast"
+    },
+    [AIModel.IRCNN_LX1]: {
+        name: "IRCNN_LX1",
+        description: "Good balance",
+        scale: 1,
+        quality: "Medium",
+        speed: "Fast"
+    },
+    [AIModel.IRCNN_MX1]: {
+        name: "IRCNN_MX1",
+        description: "Good balance",
+        scale: 1,
         quality: "Medium",
         speed: "Fast"
     }

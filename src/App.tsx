@@ -1,26 +1,33 @@
 import React, { useState } from 'react';
-import { Home, Zap, Settings } from 'lucide-react';
+import { Home, Zap, Settings as SettingsIcon } from 'lucide-react'; // Renommé Settings pour éviter conflit
 import HomePage from './pages/HomePage';
 import UpscalePage from './pages/UpscalePage';
 import SettingsPage from './pages/SettingsPage';
 
-type PageType = 'home' | 'upscale' | 'settings';
+// Exportez PageType pour que HomePage puisse l'utiliser
+export type PageType = 'home' | 'upscale' | 'settings';
 
 function App() {
-     const [currentPage, setCurrentPage] = useState<PageType>('home');
+    const [currentPage, setCurrentPage] = useState<PageType>('home');
 
     const menuItems = [
         { id: 'home', label: 'Home', icon: Home, page: 'home' as PageType },
         { id: 'upscale', label: 'Upscale', icon: Zap, page: 'upscale' as PageType },
-        { id: 'settings', label: 'Settings', icon: Settings, page: 'settings' as PageType }
+        { id: 'settings', label: 'Settings', icon: SettingsIcon, page: 'settings' as PageType } // Utiliser SettingsIcon
     ];
 
     const renderPage = () => {
         switch (currentPage) {
-            case 'home': return <HomePage />;
-            case 'upscale': return <UpscalePage />;
-            case 'settings': return <SettingsPage />;
-            default: return <UpscalePage />;
+            case 'home':
+                // Passez setCurrentPage en tant que prop à HomePage
+                return <HomePage onNavigate={setCurrentPage} />;
+            case 'upscale':
+                return <UpscalePage />;
+            case 'settings':
+                return <SettingsPage />;
+            default:
+                // Peut-être retourner HomePage par défaut ou une page d'erreur
+                return <HomePage onNavigate={setCurrentPage} />;
         }
     };
 
@@ -71,7 +78,7 @@ function App() {
             <div className="flex-1 flex flex-col overflow-hidden">
                 {/* Top Bar with Window Controls */}
                 <div className="h-10 bg-[#2d2d2d] border-b border-gray-700 flex items-center justify-between px-4">
-                    <div className="text-sm text-gray-400">QualityShoot Pro</div>
+                    <div className="text-sm text-gray-400">QualityShoot | by Fox</div>
 
                     {/* Window Controls */}
                     <div className="flex items-center space-x-2">

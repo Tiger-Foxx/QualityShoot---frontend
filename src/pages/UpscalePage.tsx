@@ -43,10 +43,21 @@ const UpscalePage: React.FC = () => {
             setShowSuccessMessage(true);
 
             // Essayer de trouver l'image traitée pour le preview
+
             if (currentProcess.completed_files && currentProcess.completed_files.length > 0) {
+                // localStorage.setItem('lastProcessedImage', processedImagePath || currentProcess.completed_files[0]);
+                // localStorage.setItem('AI_model_used',enhancementSettings.ai_model?.toString()||'')
+                // console.log("AI MODEL USED ",enhancementSettings.ai_model?.toString(),processedImagePath)
                 // Pour l'instant, on prend le premier fichier traité
                 // TODO: Adapter selon le fichier actuellement prévisualisé
-                setProcessedImagePath(currentProcess.completed_files[0]);
+                console.log(currentProcess.completed_files)
+                try {
+                    setProcessedImagePath(currentProcess.completed_files[1]);
+                }
+                catch (e) {
+                    console.log(e);
+                    setProcessedImagePath(currentProcess.completed_files[0]);
+                }
             }
 
             // Masquer le message après 5 secondes
@@ -124,20 +135,6 @@ const UpscalePage: React.FC = () => {
                     />
                 )}
 
-                {/* Success Notification */}
-                {/*{showSuccessMessage && isCompleted && (*/}
-                {/*    <div className="absolute top-6 left-1/2 transform -translate-x-1/2 z-30">*/}
-                {/*        <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-4 rounded-xl shadow-2xl border border-green-500 flex items-center space-x-3 animate-slide-down">*/}
-                {/*            <CheckCircle size={24} />*/}
-                {/*            <div>*/}
-                {/*                <div className="font-bold text-lg">Enhancement Complete!</div>*/}
-                {/*                <div className="text-green-100 text-sm">*/}
-                {/*                    {currentProcess.completed_files?.length || 0} file(s) successfully enhanced*/}
-                {/*                </div>*/}
-                {/*            </div>*/}
-                {/*        </div>*/}
-                {/*    </div>*/}
-                {/*)}*/}
             </div>
 
             {/* Enhancement Settings */}

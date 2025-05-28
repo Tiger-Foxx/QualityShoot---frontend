@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Tutoriel : Créer un exécutable (.exe) pour une app Electron+Python (Qualité PRO)</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.0/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        code { background: #191f2b; color: #d1d5db; padding: 2px 6px; border-radius: 4px;}
+        pre { background: #1e293b; color: #d1d5db; padding: 1rem; border-radius: 8px; overflow-x: auto;}
+        .step { @apply mb-8 }
+        .tip { @apply bg-blue-100 border-l-4 border-blue-500 text-blue-700 px-4 py-2 rounded my-2;}
+        .warn { @apply bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 px-4 py-2 rounded my-2;}
+        .error { @apply bg-red-100 border-l-4 border-red-500 text-red-700 px-4 py-2 rounded my-2;}
+        .check { @apply text-green-600 mr-2 }
+        .folder { font-family: 'Fira Mono', 'Consolas', monospace; color: #60a5fa; font-size: 0.95em;}
+        .section-title { @apply text-2xl mt-10 mb-5 font-bold border-b-2 border-gray-300 pb-2;}
+        .subsection-title { @apply text-xl mt-8 mb-2 font-bold;}
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+<div class="max-w-5xl mx-auto px-4 py-10">
+    <h1 class="text-4xl font-extrabold text-blue-600 mb-6">🚀 Guide Complet : Packager une App Electron + Python en EXE</h1>
+
+    <div class="bg-white rounded-xl shadow p-6 mb-10">
+        <p class="mb-3">Ce guide vous accompagne pour :</p>
+        <ul class="list-disc ml-8">
+            <li>Corriger l’erreur <b>Autofill.enable</b> dans Electron</li>
+            <li>Créer un <b>exécutable (.exe)</b> pour votre application <b>Electron/React</b></li>
+            <li>Créer un <b>exécutable (.exe)</b> pour votre <b>serveur Python FastAPI</b> (avec <code>assets</code> embarqués !)</li>
+            <li>Faire démarrer le serveur Python automatiquement depuis Electron</li>
+            <li>Bonus : Archi "Lanceur" si besoin de gérer les deux process proprement</li>
+            <li>📝 <b>Tout illustré, étape par étape, pour débutants</b></li>
+        </ul>
+    </div>
+
+    <div class="section-title">1️⃣ Correction de l’erreur <code>Autofill.enable</code> dans Electron</div>
+
+    <div class="mb-5">
+        <p>
+            Cette erreur apparaît dans la console DevTools d’Electron :
+        </p>
+        <pre>
+[13580:0528/024406.399:ERROR:CONSOLE:1] "Request Autofill.enable failed. {"code":-32601,"message":"'Autofill.enable' wasn't found"}"
+[13580:0528/024406.399:ERROR:CONSOLE:1] "Request Autofill.setAddresses failed. {"code":-32601,"message":"'Autofill.setAddresses' wasn't found"}"
+      </pre>
+        <div class="tip">
+            👉 <b>Ce n’est pas une erreur critique !</b><br>
+            Electron/Chromium affiche ça car <b>l’API Autofill n’est pas dispo en mode desktop</b> (pas de remplissage auto dans Electron).<br>
+            <b>Vous pouvez ignorer</b>, ou <b>masquer ce warning</b> en désactivant l’autofill dans DevTools, ou en filtrant les logs.
+        </div>
+        <div class="warn">
+            <b>Vous pouvez continuer votre build sans problème.</b>
+        </div>
+    </div>
+
+    <div class="section-title">2️⃣ Générer l’EXE de votre app Electron (frontend React)</div>
+
+    <div class="mb-5">
+        <div class="subsection-title">A. Installer les dépendances nécessaires</div>
+        <ul class="list-decimal ml-8 mb-3">
+            <li>Assurez-vous d’avoir <b>Node.js</b> (16+), <b>npm</b> ou <b>yarn</b> installés</li>
+            <li>Dans votre dossier <span class="folder">frontend</span> (racine Electron/React) :
+                <pre>
+npm install
+npm install electron --save-dev
+npm install electron-builder --save-dev
+# Si tu utilises Vite + React :
+npm install vite react react-dom
+</pre>
+            </li>
+        </ul>
+    </div>
+
+    <div class="mb-5">
+        <div class="subsection-title">B. Structure attendue du projet Electron/React</div>
+        <div class="bg-gray-200 rounded p-3 font-mono text-xs">
+            frontend/
+            ├── package.json
+            ├── public/
+            │   └── electron.cjs, preload.cjs, ...
+            ├── src/
+            │   ├── main.tsx, App.tsx, ...
+            │   ├── assets/
+            │   └── ...
+            ├── electron-main.js (ou electron.cjs)
+            └── ...
+        </div>
+    </div>
+
+    <div class="mb-5">
+        <div class="subsection-title">C. Configurer <code>electron-builder</code> dans <code>package.json</code></div>
+        <pre>
+{
+  "name": "qualityshoot-frontend",
+  "version": "1.0.0",
+  "main": "public/electron.cjs",
+  ...
+  "build": {
+    "appId": "com.yourdomain.qualityshoot",
+    "productName": "QualityShoot",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "dist/**",    // build du React (Vite/CRA)
+      "public/**",  // electron.cjs, preload.cjs, etc.
+      "assets/**"   // si tu veux inclure assets du front
+    ],
+    "extraResources": [
+      {
+        "from": "../backend-dist",  // dossier où tu mettras ton EXE Python + assets
+        "to": "backend"
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "public/logo.png"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build-electron": "electron-builder"
+  }
+}
+      </pre>
+        <div class="tip">
+            <b>Astuce :</b> <br>
+            <code>extraResources</code> permet d’embarquer ton serveur Python packagé et ses assets directement dans l’EXE Electron, dans le dossier <b>backend/</b> du build.
+        </div>
+    </div>
+
+    <div class="mb-5">
+        <div class="subsection-title">D. Build du Front (React/Vite) + Electron</div>
+        <ul class="list-decimal ml-8 mb-3">
+            <li>Build du front (Vite ou CRA) :
+                <pre>
+npm run build
+# ou
+yarn build
+</pre>
+            </li>
+            <li>Build de l’EXE Electron :
+                <pre>
+npm run build-electron
+</pre>
+            </li>
+            <li>L’exécutable se trouve dans <span class="folder">frontend/dist-electron/</span></li>
+        </ul>
+        <div class="warn">
+            <b>Attention :</b> <br>
+            <ul>
+                <li>Le serveur Python n’est pas inclus ici ! Il faudra le packager à part (voir plus bas).</li>
+                <li>Pour embarquer le backend, voir la section <b>ExtraResources</b> plus haut.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section-title">3️⃣ Packager le serveur Python (.exe) avec PyInstaller</div>
+
+    <div class="mb-5">
+        <div class="subsection-title">A. Installer PyInstaller</div>
+        <pre>
+pip install pyinstaller
+      </pre>
+        <div class="tip">
+            Utilisez <code>python -m venv venv</code> puis <code>venv\Scripts\activate</code> pour isoler votre environnement.
+        </div>
+    </div>
+
+    <div class="mb-5">
+        <div class="subsection-title">B. Structurer les assets et dépendances</div>
+        <ul class="list-disc ml-7">
+            <li>Placez tous vos assets nécessaires dans <span class="folder">backend/assets/</span> (modèles IA, exiftool, ffmpeg, ...)</li>
+            <li>Vérifiez <code>requirements.txt</code> pour toutes les librairies nécessaires !</li>
+        </ul>
+        <div class="warn">⚠️ <b>Attention :</b> Certains packages (onnxruntime, opencv, etc) peuvent nécessiter des options spéciales lors du pack.</div>
+    </div>
+
+    <div class="mb-5">
+        <div class="subsection-title">C. Générer l’exécutable avec PyInstaller</div>
+        <ul class="list-decimal ml-7">
+            <li>Placez-vous dans <span class="folder">backend/</span></li>
+            <li>Lancez la commande :
+                <pre>
+pyinstaller --onefile --noconsole --add-data "assets;assets" --add-data ".env;." main.py
+</pre>
+            </li>
+            <li>
+                <b>Explications :</b>
+                <ul class="list-disc ml-7">
+                    <li><code>--onefile</code> : un seul EXE</li>
+                    <li><code>--noconsole</code> : pas de fenêtre noire</li>
+                    <li><code>--add-data "assets;assets"</code> : inclut le dossier assets dans l’EXE (attention au <code>;</code> sous Windows, <code>:</code> sous Linux/Mac)</li>
+                    <li><code>--add-data ".env;."</code> : embarque le .env</li>
+                </ul>
+            </li>
+            <li>L’exécutable sera généré dans <span class="folder">dist/main.exe</span></li>
+        </ul>
+        <div class="tip">
+            <b>Si vous avez des assets dans des sous-dossiers :</b><br>
+            Ajoutez autant de <code>--add-data</code> que nécessaire.<br>
+            Pour plusieurs assets : <code>--add-data "assets/AI-onnx;assets/AI-onnx"</code>
+        </div>
+    </div>
+
+    <div class="mb-5">
+        <div class="subsection-title">D. Gérer les assets dans le code Python</div>
+        <pre>
+import sys
+from pathlib import Path
+
+def get_asset_path(relative_path):
+    if getattr(sys, 'frozen', False):  # EXE PyInstaller
+        base_path = Path(sys._MEIPASS)
+    else:
+        base_path = Path(__file__).parent
+    return base_path / relative_path
+
+# Exemple d'utilisation
+ffmpeg_path = get_asset_path("assets/ffmpeg/ffmpeg.exe")
+      </pre>
+        <div class="tip">Utilisez ce helper partout où vous accédez à des assets !</div>
+    </div>
+
+    <div class="mb-5">
+        <div class="subsection-title">E. Erreurs courantes avec PyInstaller</div>
+        <ul class="list-disc ml-7">
+            <li class="error"><b>ModuleNotFoundError</b>: Ajoutez le module manuellement via <code>--hidden-import</code></li>
+            <li class="error"><b>OnnxRuntime / OpenCV DLL load failed</b>: Copiez les DLL nécessaires dans <code>assets/</code> et ajoutez-les avec <code>--add-binary</code></li>
+            <li class="error"><b>Assets non trouvés</b>: Toujours utiliser le helper <code>get_asset_path()</code> ci-dessus</li>
+            <li class="error">Chemin <code>assets;assets</code> sous Windows, <code>assets:assets</code> sous Linux/Mac</li>
+            <li class="error">Le EXE Python est très gros ? Utilisez <code>--onefile</code> pour réduire, mais <b>ne supprimez pas les DLL nécessaires</b></li>
+        </ul>
+    </div>
+
+    <div class="section-title">4️⃣ Faire démarrer le serveur Python automatiquement depuis Electron</div>
+
+    <div class="mb-5">
+        <div class="subsection-title">A. Modifier <code>electron.cjs</code> pour lancer le backend</div>
+        <pre>
+const { app, BrowserWindow } = require('electron');
+const path = require('path');
+const { spawn } = require('child_process');
+
+let pythonProcess = null;
+
+function createWindow() {
+  const win = new BrowserWindow({
+    width: 1200,
+    height: 800,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.cjs'),
+      nodeIntegration: false,
+      contextIsolation: true
+    }
+  });
+
+  win.loadURL('http://localhost:5173'); // ou le build local
+
+  // Démarrer le serveur Python packagé
+  const backendPath = path.resolve(__dirname, 'backend', process.platform === 'win32' ? 'main.exe' : 'main');
+  pythonProcess = spawn(backendPath, [], {
+    cwd: path.dirname(backendPath),
+    detached: false,
+    stdio: 'ignore'
+  });
+
+  // Optionnel : Fermer backend à la fermeture de l'app
+  win.on('closed', () => {
+    if (pythonProcess) {
+      pythonProcess.kill();
+      pythonProcess = null;
+    }
+  });
+}
+
+app.whenReady().then(createWindow);
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') app.quit();
+});
+      </pre>
+        <div class="tip">
+            <b>Astuce :</b> Utilisez <code>backend/main.exe</code> pour Windows, <code>backend/main</code> pour Linux/Mac.<br>
+            <b>Vérifiez que le backend écoute bien sur le port 8000 (ou configurer selon besoin) !</b>
+        </div>
+    </div>
+
+    <div class="mb-5">
+        <div class="subsection-title">B. Faire pointer l’API du front vers le serveur Python local</div>
+        <div class="bg-gray-200 rounded p-3 mb-2">
+            <b>Dans <code>apiService.ts</code> :</b><br>
+            <code>const API_BASE_URL = 'http://127.0.0.1:8000';</code>
+        </div>
+        <div class="tip">
+            <b>Si votre backend écoute sur un autre port, modifiez ici !</b>
+        </div>
+    </div>
+
+    <div class="mb-5">
+        <div class="subsection-title">C. Tester l’intégration finale</div>
+        <ul class="list-decimal ml-8">
+            <li>Lancez l’EXE Electron (<code>QualityShoot Setup.exe</code> ou <code>QualityShoot.exe</code>)</li>
+            <li>Le serveur Python doit démarrer en arrière-plan</li>
+            <li>Le front doit pouvoir dialoguer via <code>http://127.0.0.1:8000</code></li>
+            <li>Si besoin, ajoutez des logs dans Electron pour déboguer le <code>spawn</code> du serveur</li>
+        </ul>
+    </div>
+
+    <div class="section-title">5️⃣ (Bonus) Lanceur séparé pour gérer les deux EXE</div>
+    <div class="mb-5">
+        <p>
+            <b>Pour un packaging ultra-pro, certains préfèrent un petit "launcher" qui démarre backend ET frontend</b>.<br>
+            <b>Recommandé si :</b> <ul class="list-disc ml-8"><li>Vous voulez surveiller/crasher/rebooter le serveur python si crash</li><li>Vous voulez afficher un splash screen + animation pendant le boot</li></ul>
+        </p>
+        <div class="tip">
+            <b>Le plus simple :</b> Electron = le lanceur, fait spawn() le backend + le front dans le même app. <br>
+            <b>Ou :</b> un petit batch/shell/EXE C# qui lance les deux EXE.
+        </div>
+        <pre>
+# Ex: "launcher.js" (Node/Electron, mode script)
+const { spawn } = require('child_process');
+const path = require('path');
+spawn(path.join(__dirname, 'backend', 'main.exe'), {detached: true});
+spawn(path.join(__dirname, 'frontend', 'QualityShoot.exe'), {detached: true});
+      </pre>
+        <div class="tip">
+            Si tu veux un vrai splash screen, utilise une <b>fenêtre Electron custom</b> qui affiche une animation, puis lance le reste.
+        </div>
+    </div>
+
+    <div class="section-title">6️⃣ Questions/Réponses et FAQ</div>
+    <div class="mb-8">
+        <ul class="list-disc ml-8">
+            <li><b>Q : Mon EXE Python ne trouve pas les assets (modèles, ffmpeg, etc.)</b><br>
+                <span class="tip">Vérifie que tu utilises le helper <code>get_asset_path()</code> partout !</span>
+            </li>
+            <li><b>Q : L’exécutable Electron ne lance pas le backend ?</b><br>
+                <span class="tip">Vérifie le chemin dans <code>spawn()</code> et que le backend fonctionne bien seul.</span>
+            </li>
+            <li><b>Q : J’ai toujours l’erreur Autofill.enable ?</b><br>
+                <span class="warn">C’est normal, c’est Chromium. Ignore !</span>
+            </li>
+            <li><b>Q : L’EXE est trop gros ?</b><br>
+                <span class="tip">PyInstaller emballe tout. Tu peux minimiser en utilisant <code>--onefile</code> et en excluant les modules non utilisés.</span>
+            </li>
+            <li><b>Q : Peut-on updater le backend sans recompiler Electron ?</b><br>
+                <span class="tip">Oui, si tu gardes le dossier <code>backend/</code> séparé, tu peux remplacer le <code>main.exe</code> sans toucher au front.</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section-title">7️⃣ Ressources et liens utiles</div>
+    <ul class="list-disc ml-8 mb-10">
+        <li><a class="text-blue-600 underline" href="https://www.electron.build/" target="_blank">electron-builder (doc officielle)</a></li>
+        <li><a class="text-blue-600 underline" href="https://pyinstaller.org/en/stable/" target="_blank">PyInstaller (doc officielle)</a></li>
+        <li><a class="text-blue-600 underline" href="https://vitejs.dev/" target="_blank">Vite (pour React)</a></li>
+        <li><a class="text-blue-600 underline" href="https://fastapi.tiangolo.com/deployment/" target="_blank">FastAPI deployment</a></li>
+    </ul>
+
+    <footer class="text-center text-gray-400 text-xs pt-10">
+        &copy; 2025 Tutoriel généré par Copilot – QualitéShoot Project
+    </footer>
+</div>
+</body>
+</html>

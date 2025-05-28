@@ -6,6 +6,9 @@ import {
 } from 'lucide-react';
 import { apiService } from '../services/apiService';
 
+import { PageType } from '../App'; // Importez PageType depuis App.tsx
+
+
 interface StatCardProps {
     icon: React.ReactNode;
     title: string;
@@ -68,7 +71,11 @@ const ModelCard: React.FC<ModelCardProps> = ({
     );
 };
 
-const HomePage: React.FC = () => {
+interface HomePageProps {
+    onNavigate: (page: PageType) => void;
+}
+
+const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
     const [systemHealth, setSystemHealth] = useState<any>(null);
     const [serverConnected, setServerConnected] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -161,11 +168,15 @@ const HomePage: React.FC = () => {
                                 </div>
 
                                 <div className="flex space-x-4">
-                                    <button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl font-semibold flex items-center space-x-2 transition-all transform hover:scale-105 shadow-lg">
+                                    <button
+                                        onClick={() => onNavigate('upscale')}
+                                        className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl font-semibold flex items-center space-x-2 transition-all transform hover:scale-105 shadow-lg">
                                         <Play size={18} />
                                         <span>Start Enhancing</span>
                                     </button>
-                                    <button className="bg-gray-700/50 hover:bg-gray-600/50 text-white px-6 py-3 rounded-xl font-semibold flex items-center space-x-2 transition-all border border-gray-600/50">
+                                    <button
+                                        onClick={() => onNavigate('upscale')}
+                                        className="bg-gray-700/50 hover:bg-gray-600/50 text-white px-6 py-3 rounded-xl font-semibold flex items-center space-x-2 transition-all border border-gray-600/50">
                                         <Settings size={18} />
                                         <span>Settings</span>
                                     </button>

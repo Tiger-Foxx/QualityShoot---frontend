@@ -1,8 +1,9 @@
+// frontend/public/electron.cjs
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const { spawn } = require('child_process');
-const path = require('path');
+const path = require('path'); // Assurez-vous que path est importé
 const isDev = require('electron-is-dev');
-const fs = require('fs'); // AJOUTER ÇA
+const fs = require('fs');
 
 let mainWindow;
 let pythonProcess;
@@ -16,23 +17,23 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      preload: path.join(__dirname, 'preload.cjs')
+      preload: path.join(__dirname, 'preload.cjs') // __dirname ici est correct car preload.cjs est aussi dans public/
     },
-    frame: true,
-    titleBarStyle: 'default',
+    frame: true, // Si vous voulez le frame custom, vous devriez le mettre à false plus tard et implémenter les contrôles vous-même
+    titleBarStyle: 'default', // 'hidden' ou 'customButtonsOnHover' si frame: false
     show: false,
-    backgroundColor: '#000000',
-    icon:'logo.png',
-
+    backgroundColor: '#000000', // Peut-être la couleur de votre loading screen
+    // MODIFICATION ICI: Utilisez path.join avec __dirname
+    icon: path.join(__dirname, 'logo.png'), // __dirname sera frontend/public/
   });
 
-  // IPC Handlers EXISTANTS
+  // ... (le reste de votre code ipcMain.handle, etc.)
+
   ipcMain.handle('select-files', async () => {
     const result = await dialog.showOpenDialog(mainWindow, {
       properties: ['openFile', 'multiSelections'],
       filters: [
         { name: 'Images/videos', extensions: ['jpg', 'jpeg', 'png', 'bmp', 'tiff', 'webp','mp4', 'mkv', 'avi', 'mov', 'webm'] },
-
       ]
     });
     return result.canceled ? [] : result.filePaths;
@@ -45,24 +46,18 @@ function createWindow() {
     return result.canceled ? '' : result.filePaths[0];
   });
 
-  // NOUVEAUX HANDLERS pour les fichiers
   ipcMain.handle('read-file-base64', async (event, filePath) => {
     try {
       console.log('🔍 [Electron] Lecture fichier:', filePath);
-
       const cleanPath = path.resolve(filePath);
-
       if (!fs.existsSync(cleanPath)) {
         console.error('❌ [Electron] Fichier non trouvé:', cleanPath);
         return null;
       }
-
       const buffer = fs.readFileSync(cleanPath);
       const base64 = buffer.toString('base64');
-
       console.log('✅ [Electron] Fichier lu en base64, taille:', base64.length);
       return base64;
-
     } catch (error) {
       console.error('❌ [Electron] Erreur lecture fichier:', error);
       return null;
@@ -86,14 +81,28 @@ function createWindow() {
     }
   });
 
-  const startUrl = isDev ? 'http://localhost:5173' : `file://${path.join(__dirname, '../dist/index.html')}`;
 
-  mainWindow.loadURL(startUrl);
-  mainWindow.show();
+  // Si vous êtes en développement, chargez depuis Vite. Sinon, chargez le build.
+  const startUrl = isDev
+      ? 'http://localhost:5173' // URL de votre serveur de dev Vite
+      : `file://${path.join(__dirname, '../../dist/index.html')}`; // Chemin vers index.html après build
 
-  if (isDev) {
-    mainWindow.webContents.openDevTools();
-  }
+  // Attention: Si electron.cjs est dans public/, et dist/ est au même niveau que src/ et public/,
+  // alors le chemin pour la prod devrait être:
+  // `file://${path.join(__dirname, '../dist/index.html')}` si dist est à côté de public
+  // `file://${path.join(__dirname, '../../dist/index.html')}` si dist est à la racine de frontend/
+
+  // En supposant que `dist` est dans `frontend/dist`, et que `electron.cjs` est dans `frontend/public/electron.cjs`.
+  // Le chemin relatif de `public` à `dist` est `../dist/`.
+  const prodUrl = `file://${path.join(__dirname, '..', 'dist', 'index.html')}`;
+
+  mainWindow.loadURL(isDev ? 'http://localhost:5173' : prodUrl);
+
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+  });
+
+
 }
 
 app.whenReady().then(createWindow);
@@ -101,4 +110,10 @@ app.whenReady().then(createWindow);
 app.on('window-all-closed', () => {
   if (pythonProcess) pythonProcess.kill();
   if (process.platform !== 'darwin') app.quit();
+});
+
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow();
+  }
 });

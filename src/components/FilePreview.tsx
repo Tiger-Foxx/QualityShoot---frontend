@@ -36,6 +36,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({
 
     useEffect(() => {
         if (processedImagePath) {
+            console.log('Loading processed image from:', processedImagePath);
             loadProcessedPreview(processedImagePath);
         } else {
             setProcessedPreviewUrl(null);
@@ -176,7 +177,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({
                             <ImageIcon className="text-white" size={24} />
                         </div>
                         <div>
-                            <h2 className="text-xl font-bold text-white">{file.file_name}</h2>
+                            <h2 className="text-xl font-bold text-white">{file.file_name.slice(0,20)} ...</h2>
                             <div className="flex items-center space-x-4 text-sm text-gray-300">
                                 <span>Image File</span>
                                 {file.resolution && (
