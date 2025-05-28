@@ -85,43 +85,26 @@ function createWindow() {
       return { exists: false, error: error.message };
     }
   });
-
-
-  // Si vous êtes en développement, chargez depuis Vite. Sinon, chargez le build.
-  const startUrl = isDev
-      ? 'http://localhost:5173' // URL de votre serveur de dev Vite
-      : `file://${path.join(__dirname, '../../dist/index.html')}`; // Chemin vers index.html après build
-
-  // Attention: Si electron.cjs est dans public/, et dist/ est au même niveau que src/ et public/,
-  // alors le chemin pour la prod devrait être:
-  // `file://${path.join(__dirname, '../dist/index.html')}` si dist est à côté de public
-  // `file://${path.join(__dirname, '../../dist/index.html')}` si dist est à la racine de frontend/
-
-  // En supposant que `dist` est dans `frontend/dist`, et que `electron.cjs` est dans `frontend/public/electron.cjs`.
-  // Le chemin relatif de `public` à `dist` est `../dist/`.
-  const prodUrl = `file://${path.join(__dirname, '..', 'dist', 'index.html')}`;
-
-  mainWindow.loadURL(isDev ? 'http://localhost:5173' : prodUrl);
-
-  mainWindow.once('ready-to-show', () => {
-    mainWindow.show();
-  });
-  // mainWindow.webContents.on('devtools-opened', () => {
-  //   if (!isDev) mainWindow.webContents.closeDevTools();
-  // });
-
   // Pour la prod, lance le backend seulement si on n'est PAS en dev :
   if (!isDev) {
 
     try {
       // Chemin vers l'exe backend, à ajuster selon ton nom de build
-      const backendExe = path.join(__dirname, '..', 'backend', 'main.exe');
+      const backendExe = path.join(process.resourcesPath, 'backend', 'main.exe');
+      console.log('Chemin backend :', backendExe);
+
       if (fs.existsSync(backendExe)) {
+
         pythonProcess = spawn(backendExe, [], {
           cwd: path.dirname(backendExe),
           detached: false,
           stdio: 'ignore'
         });
+
+      }
+      else{
+        console.error('❌ [Electron] main.exe introuvable à', backendExe);
+
       }
     }
     catch (error) {
@@ -130,6 +113,24 @@ function createWindow() {
     }
 
   }
+
+
+  // Si vous êtes en développement, chargez depuis Vite. Sinon, chargez le build.
+  const startUrl = isDev
+      ? 'http://localhost:5173' // URL de votre serveur de dev Vite
+      : `file://${path.join(__dirname, '../../dist/index.html')}`; // Chemin vers index.html après build
+
+
+  const prodUrl = `file://${path.join(__dirname, '..', 'dist', 'index.html')}`;
+
+  mainWindow.loadURL(isDev ? 'http://localhost:5173' : prodUrl);
+
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+  });
+
+
+
 
 
 
