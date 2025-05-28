@@ -26,6 +26,14 @@
     "win": {
       "target": "nsis",
       "icon": "src/assets/logo.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "QualityShoot",
+      "license": "public/EULA.txt"
     }
   },
   "homepage": "./",

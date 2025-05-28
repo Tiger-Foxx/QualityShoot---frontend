@@ -1,0 +1,51 @@
+QUALITYSHOOT - ACCORD DE LICENCE UTILISATEUR FINAL (EULA)
+
+Bienvenue dans QualityShoot, l’upscaler d’images et vidéos boosté à l’IA, développé avec amour (et un peu de café) par FOX.
+
+─────────────────────────────────────────────
+1. OPEN SOURCE, OPEN MIND
+
+QualityShoot est un projet open source.
+Vous pouvez consulter, modifier, forker, améliorer et même critiquer (gentiment) le code source sur :
+- https://github.com/theTigerFox/QualityShoot
+- https://site.the-fox.tech
+
+─────────────────────────────────────────────
+2. CE QUE VOUS POUVEZ FAIRE
+
+- Utiliser QualityShoot pour toutes vos images et vidéos, même celles de votre chat.
+- Partager, distribuer, installer sur autant de PC que vous voulez (même celui de votre grand-mère).
+- Modifier le code, contribuer, signaler des bugs, envoyer des PRs ou simplement admirer le code source.
+- Mettre un ⭐ sur GitHub (ça fait toujours plaisir).
+
+─────────────────────────────────────────────
+3. CE QUE VOUS NE POUVEZ PAS FAIRE
+
+- Vendre QualityShoot sans respecter la licence open source associée (voir GitHub pour les détails précis).
+- Accuser FOX si votre PC se met à upscaler vos photos d’enfance en 8K par erreur (aucune garantie, désolé !).
+
+─────────────────────────────────────────────
+4. PAS DE GARANTIE
+
+QualityShoot est fourni “tel quel”, sans garantie d’aucune sorte.
+Si votre chat devient trop beau après un upscale, c’est à vos risques et périls.
+FOX ne pourra être tenu responsable pour les images devenues trop nettes, ni pour la disparition mystérieuse de pixels.
+
+─────────────────────────────────────────────
+5. REMERCIEMENTS
+
+Merci d’utiliser ce logiciel.
+Si vous aimez QualityShoot, dites-le sur les réseaux, parlez-en à vos amis, ou envoyez un coucou à FOX sur Twitter/X : @theTigerFox
+
+─────────────────────────────────────────────
+6. MOT DE LA FIN
+
+Lancez, upscalez, amusez-vous.
+Et souvenez-vous : “Avec un grand pouvoir de résolution, vient une grande responsabilité !”
+
+─────────────────────────────────────────────
+Auteur : FOX
+Licence : Open Source (voir repo GitHub pour détails)
+Année : 2025
+
+─────────────────────────────────────────────
