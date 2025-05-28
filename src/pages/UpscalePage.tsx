@@ -1,11 +1,12 @@
 ﻿import React, { useState, useCallback, useEffect } from 'react';
-import { Play, Square, AlertCircle, CheckCircle, Clock, Sparkles } from 'lucide-react';
+import { Play, Square, AlertCircle, CheckCircle, Clock, Sparkles, FolderOpen } from 'lucide-react';
 import { useFiles } from '../hooks/useFiles';
 import { useUpscale } from '../hooks/useUpscale';
 import FileManager from '../components/FileManager';
 import FilePreview from '../components/FilePreview';
 import EnhancementSettings from '../components/EnhancementSettings';
 import ProcessingStatus from '../components/ProcessingStatus';
+import { electronService } from '../services/electronService';
 import type { UpscaleRequest } from '../models';
 
 const UpscalePage: React.FC = () => {
@@ -37,34 +38,21 @@ const UpscalePage: React.FC = () => {
     const [processedImagePath, setProcessedImagePath] = useState<string | null>(null);
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
-    // Surveiller la fin du processus
-    useEffect(() => {
-        if (currentProcess?.status === 'completed' && !showSuccessMessage) {
-            setShowSuccessMessage(true);
+    // Garde le dernier process pour accès au path de sortie
+    const [lastOutputDir, setLastOutputDir] = useState<string | undefined>(undefined);
 
-            // Essayer de trouver l'image traitée pour le preview
+    // Reset complet de la sélection, preview et process
+    const handleReset = useCallback(() => {
+        resetProcess();
+        clearFiles();
+        setProcessedImagePath(null);
+        setPreviewFile(null);
+        setShowSuccessMessage(false);
+        setLastOutputDir(undefined);
+        setPreviewZoom(100);
+    }, [resetProcess, clearFiles]);
 
-            if (currentProcess.completed_files && currentProcess.completed_files.length > 0) {
-                // localStorage.setItem('lastProcessedImage', processedImagePath || currentProcess.completed_files[0]);
-                // localStorage.setItem('AI_model_used',enhancementSettings.ai_model?.toString()||'')
-                // console.log("AI MODEL USED ",enhancementSettings.ai_model?.toString(),processedImagePath)
-                // Pour l'instant, on prend le premier fichier traité
-                // TODO: Adapter selon le fichier actuellement prévisualisé
-                console.log(currentProcess.completed_files)
-                try {
-                    setProcessedImagePath(currentProcess.completed_files[1]);
-                }
-                catch (e) {
-                    console.log(e);
-                    setProcessedImagePath(currentProcess.completed_files[0]);
-                }
-            }
-
-            // Masquer le message après 5 secondes
-            setTimeout(() => setShowSuccessMessage(false), 5000);
-        }
-    }, [currentProcess?.status, showSuccessMessage]);
-
+    // Démarre un nouvel upscaling
     const handleStartUpscaling = useCallback(async () => {
         if (selectedFiles.length === 0) return;
 
@@ -87,16 +75,67 @@ const UpscalePage: React.FC = () => {
             output_path: enhancementSettings.output_path
         };
 
+        // Enregistre le path de sortie pour "Ouvrir dossier"
+        setLastOutputDir(enhancementSettings.output_path);
+
         const processId = await startUpscaling(request);
         if (processId) {
-            console.log(`🚀 Processus démarré avec ID: ${processId}`);
+            // Rien à faire ici, le polling commence
         }
     }, [selectedFiles, enhancementSettings, startUpscaling]);
+
+    // Preview auto après upscaling (si image unique)
+    useEffect(() => {
+        if (!currentProcess) return;
+
+        const isCompleted = currentProcess.status === 'completed';
+        if (isCompleted && !showSuccessMessage) {
+            setShowSuccessMessage(true);
+
+            // Si une seule image et un seul fichier traité => preview auto
+            if (
+                currentProcess.completed_files &&
+                currentProcess.completed_files.length === 1 &&
+                selectedFiles.length === 1 &&
+                !selectedFiles[0].is_video
+            ) {
+                setProcessedImagePath(currentProcess.completed_files[0]);
+                setPreviewFile({
+                    ...selectedFiles[0],
+                    file_path: currentProcess.completed_files[0]
+                });
+            } else {
+                setProcessedImagePath(null);
+            }
+
+            // Path de sortie pour bouton "Ouvrir dossier"
+            if (enhancementSettings.output_path) {
+                setLastOutputDir(enhancementSettings.output_path);
+            } else if (selectedFiles.length > 0) {
+                // Si pas de output_path custom, dossier du 1er fichier
+                setLastOutputDir(selectedFiles[0].file_path ?
+                    selectedFiles[0].file_path.replace(/[/\\][^/\\]+$/, '') : undefined
+                );
+            }
+
+            setTimeout(() => setShowSuccessMessage(false), 5000);
+        }
+    }, [currentProcess, showSuccessMessage, selectedFiles, enhancementSettings.output_path]);
+
+    // Ajoute "Ouvrir dossier" via Electron (ou fallback)
+    const handleOpenOutputDir = useCallback(() => {
+        if (lastOutputDir) {
+            electronService.openFolder(lastOutputDir);
+        }
+    }, [lastOutputDir]);
 
     const filesByType = getFilesByType();
     const totalSize = getTotalSize();
     const isCompleted = currentProcess?.status === 'completed';
     const hasErrors = currentProcess?.status === 'error' || fileError || processError;
+
+    // Détermine si on propose un bouton "Nouveau traitement"
+    const canStartNew = !isProcessing && (isCompleted || hasErrors);
 
     return (
         <div className="h-full flex bg-[#1e1e1e] relative">
@@ -131,10 +170,9 @@ const UpscalePage: React.FC = () => {
                         progress={progress}
                         currentProcess={currentProcess}
                         onCancel={cancelUpscaling}
-                        onReset={resetProcess}
+                        onReset={handleReset}
                     />
                 )}
-
             </div>
 
             {/* Enhancement Settings */}
@@ -148,37 +186,8 @@ const UpscalePage: React.FC = () => {
             <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-20">
                 <div className="bg-gradient-to-r from-gray-800 to-gray-700 border border-gray-600 rounded-2xl p-6 shadow-2xl backdrop-blur-sm">
                     <div className="flex items-center space-x-6">
-                        {/* Main Action Button */}
-                        {!isProcessing ? (
-                            <button
-                                onClick={handleStartUpscaling}
-                                disabled={selectedFiles.length === 0 || isLoading}
-                                className={`relative overflow-hidden px-8 py-4 rounded-xl font-bold text-lg flex items-center space-x-3 transition-all transform hover:scale-105 disabled:hover:scale-100 shadow-lg ${
-                                    selectedFiles.length === 0 || isLoading
-                                        ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                                        : isCompleted
-                                            ? 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white'
-                                            : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white'
-                                }`}
-                            >
-                                {isCompleted ? (
-                                    <>
-                                        <Sparkles size={24} />
-                                        <span>Enhance More Files</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Play size={24} />
-                                        <span>
-                                            {selectedFiles.length === 0
-                                                ? 'Select files to start'
-                                                : `Enhance ${selectedFiles.length} file${selectedFiles.length > 1 ? 's' : ''}`
-                                            }
-                                        </span>
-                                    </>
-                                )}
-                            </button>
-                        ) : (
+                        {/* MAIN ACTION BUTTON */}
+                        {isProcessing ? (
                             <div className="flex items-center space-x-4">
                                 <button
                                     onClick={cancelUpscaling}
@@ -187,7 +196,6 @@ const UpscalePage: React.FC = () => {
                                     <Square size={20} />
                                     <span>Cancel</span>
                                 </button>
-
                                 <div className="flex items-center space-x-3">
                                     <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center animate-spin">
                                         <Clock size={16} className="text-white" />
@@ -198,6 +206,32 @@ const UpscalePage: React.FC = () => {
                                     </div>
                                 </div>
                             </div>
+                        ) : canStartNew ? (
+                            <button
+                                onClick={handleReset}
+                                className="relative overflow-hidden px-8 py-4 rounded-xl font-bold text-lg flex items-center space-x-3 transition-all transform hover:scale-105 shadow-lg bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white"
+                            >
+                                <Sparkles size={24} />
+                                <span>Enhance More Files</span>
+                            </button>
+                        ) : (
+                            <button
+                                onClick={handleStartUpscaling}
+                                disabled={selectedFiles.length === 0 || isLoading}
+                                className={`relative overflow-hidden px-8 py-4 rounded-xl font-bold text-lg flex items-center space-x-3 transition-all transform hover:scale-105 disabled:hover:scale-100 shadow-lg ${
+                                    selectedFiles.length === 0 || isLoading
+                                        ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                                        : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white'
+                                }`}
+                            >
+                                <Play size={24} />
+                                <span>
+                                    {selectedFiles.length === 0
+                                        ? 'Select files to start'
+                                        : `Enhance ${selectedFiles.length} file${selectedFiles.length > 1 ? 's' : ''}`
+                                    }
+                                </span>
+                            </button>
                         )}
 
                         {/* Status Indicator */}
@@ -232,17 +266,28 @@ const UpscalePage: React.FC = () => {
                         </div>
                     )}
 
-                    {/* Success Summary */}
+                    {/* Success Summary + open dir */}
                     {isCompleted && !hasErrors && (
-                        <div className="mt-4 bg-green-900/50 border border-green-600 rounded-xl p-4 flex items-center space-x-3">
-                            <CheckCircle size={20} className="text-green-300 flex-shrink-0" />
-                            <div className="text-green-300">
-                                <div className="font-semibold">Enhancement completed successfully!</div>
-                                <div className="text-sm mt-1">
-                                    {currentProcess?.completed_files?.length || 0} files enhanced,
-                                    {currentProcess?.failed_files?.length || 0} failed
+                        <div className="mt-4 bg-green-900/50 border border-green-600 rounded-xl p-4 flex flex-col space-y-2">
+                            <div className="flex items-center space-x-3">
+                                <CheckCircle size={20} className="text-green-300 flex-shrink-0" />
+                                <div className="text-green-300">
+                                    <div className="font-semibold">Enhancement completed successfully!</div>
+                                    <div className="text-sm mt-1">
+                                        {currentProcess?.completed_files?.length || 0} files enhanced,
+                                        {currentProcess?.failed_files?.length || 0} failed
+                                    </div>
                                 </div>
                             </div>
+                            {/* Bouton ouvrir dossier */}
+                            <button
+                                onClick={handleOpenOutputDir}
+                                className="flex items-center mt-2 justify-center bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg space-x-2 transition"
+                                type="button"
+                            >
+                                <FolderOpen size={18} />
+                                <span>Ouvrir le dossier de sortie</span>
+                            </button>
                         </div>
                     )}
                 </div>

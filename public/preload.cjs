@@ -1,4 +1,5 @@
 const { contextBridge, ipcRenderer } = require('electron');
+const {  shell } = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
   // API pour communiquer avec le processus principal
@@ -7,7 +8,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   close: () => ipcRenderer.invoke('close-window'),
   selectFiles: () => ipcRenderer.invoke('select-files'),
   selectFolder: () => ipcRenderer.invoke('select-folder'),
-
+  openFolder: (folderPath) => ipcRenderer.invoke('open-folder', folderPath),
   // NOUVELLE APPROCHE: Demander au main process de lire le fichier
   readFileAsBase64: (filePath) => ipcRenderer.invoke('read-file-base64', filePath),
 

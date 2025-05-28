@@ -5,6 +5,7 @@ interface ElectronAPI {
     close: () => Promise<void>;
     selectFiles: () => Promise<string[]>;
     selectFolder: () => Promise<string>;
+    openFile: (filePath: string) => Promise<void>;
 }
 
 declare global {
@@ -17,6 +18,16 @@ class ElectronService {
     private isElectron(): boolean {
         return !!window.electronAPI;
     }
+
+    openFolder(folderPath: string): void {
+        if ((window as any).electronAPI?.openFolder) {
+            (window as any).electronAPI.openFolder(folderPath);
+        } else {
+            // Fallback web
+            window.open('file://' + folderPath.replace(/\\/g, '/'));
+        }
+    }
+
 
     async selectFiles(): Promise<string[]> {
         if (this.isElectron() && window.electronAPI) {
@@ -129,6 +140,10 @@ class ElectronService {
         const ext = this.getFileExtension(filePath).toLowerCase();
         return videoExtensions.includes(ext);
     }
+
+
+
+
 }
 
 export const electronService = new ElectronService();

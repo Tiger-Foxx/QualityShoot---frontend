@@ -4,6 +4,8 @@ const { spawn } = require('child_process');
 const path = require('path'); // Assurez-vous que path est importé
 const isDev = require('electron-is-dev');
 const fs = require('fs');
+const { shell } = require('electron');
+
 
 let mainWindow;
 let pythonProcess;
@@ -104,7 +106,11 @@ function createWindow() {
 
 
 }
-
+ipcMain.handle('open-folder', async (event, folderPath) => {
+  if (folderPath && typeof folderPath === "string") {
+    await shell.openPath(folderPath);
+  }
+});
 app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
