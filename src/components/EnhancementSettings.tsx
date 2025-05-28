@@ -100,13 +100,20 @@ const EnhancementSettings: React.FC<EnhancementSettingsProps> = ({
     const [selectedPreset, setSelectedPreset] = useState<keyof typeof QUALITY_PRESETS>('balanced');
     const [showAdvanced, setShowAdvanced] = useState(false);
     const [customOutputPath, setCustomOutputPath] = useState<string>('');
-    const [customSettings, setCustomSettings] = useState({
+    const [customSettings, setCustomSettings] = useState<{
+        ai_model: keyof typeof AIModel | AIModel
+        input_resize_factor: number;
+        output_resize_factor: number;
+        vram_limit: number;
+        multithreading: number;
+        output_path: string | undefined;
+    }>({
         ai_model: AIModel.REALESR_GX4,
         input_resize_factor: 1.0,
         output_resize_factor: 1.1,
         vram_limit: 4.0,
         multithreading: 1,
-        output_path: undefined as string | undefined
+        output_path: undefined
     });
 
     const handlePresetChange = (preset: keyof typeof QUALITY_PRESETS) => {

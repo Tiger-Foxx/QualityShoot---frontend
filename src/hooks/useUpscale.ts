@@ -23,7 +23,7 @@ export const useUpscale = (): UseUpscaleResult => {
     const [error, setError] = useState<string | null>(null);
     const [progress, setProgress] = useState(0);
 
-    const pollIntervalRef = useRef<NodeJS.Timeout>();
+    const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
     const currentProcessIdRef = useRef<string | null>(null);
 
     const pollProcessStatus = useCallback(async (processId: string) => {

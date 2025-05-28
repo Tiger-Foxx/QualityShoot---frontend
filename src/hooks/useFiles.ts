@@ -160,6 +160,8 @@ export const useFiles = (): UseFilesResult => {
         clearFiles,
         validateFiles,
         getTotalSize,
-        getFilesByType
+        getFilesByType,
+        selectFilesVideo,   // <-- ajouter ici !
+
     };
 };
