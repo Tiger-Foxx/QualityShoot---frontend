@@ -1,12 +1,12 @@
 ﻿// Énumérations avec const au lieu d'enum
 export const AIModel = {
-  REALESR_GX4: "RealESR_Gx4",
-  REALESR_ANIMEX4: "RealESR_Animex4",
-  BSRGANX4: "BSRGANx4",
-  REALESRGANX4: "RealESRGANx4",
-  BSRGANX2: "BSRGANx2",
-  IRCNN_MX1: "IRCNN_Mx1",
-  IRCNN_LX1: "IRCNN_Lx1"
+  RealESR_Gx4: "RealESR_Gx4",
+  RealESR_Animex4: "RealESR_Animex4",
+  BSRGANx4: "BSRGANx4",
+  RealESRGANx4: "RealESRGANx4",
+  BSRGANx2: "BSRGANx2",
+  IRCNN_Mx1: "IRCNN_Mx1",
+  IRCNN_Lx1: "IRCNN_Lx1"
 } as const;
 
 export type AIModel = typeof AIModel[keyof typeof AIModel];

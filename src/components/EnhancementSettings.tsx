@@ -15,42 +15,42 @@ const QUALITY_PRESETS = {
         name: "Fast Processing",
         description: "Quick results, standard quality",
         icon: "⚡",
-        model: AIModel.REALESR_GX4,
+        model: AIModel.RealESR_Gx4,
         settings: { input: 1.0, output: 1.0, vram: 2, scale: "4x" }
     },
     balanced: {
         name: "Balanced Quality",
         description: "Best balance of speed and quality",
         icon: "⚖️",
-        model: AIModel.REALESR_GX4,
+        model: AIModel.RealESR_Gx4,
         settings: { input: 1.0, output: 1.2, vram: 4, scale: "4x → 4.8x" }
     },
     high: {
         name: "High Quality",
         description: "Maximum quality, slower processing",
         icon: "💎",
-        model: AIModel.REALESR_GX4,
+        model: AIModel.RealESR_Gx4,
         settings: { input: 1.0, output: 1.5, vram: 6, scale: "4x → 6x" }
     },
     anime: {
         name: "Anime & Illustrations",
         description: "Optimized for drawn content",
         icon: "🎨",
-        model: AIModel.REALESR_ANIMEX4,
+        model: AIModel.RealESR_Animex4,
         settings: { input: 1.0, output: 1.0, vram: 4, scale: "4x" }
     }
 };
 
 const AI_MODELS = {
-    [AIModel.REALESR_GX4]: {
-        name: "RealESRGAN x4",
+    [AIModel.RealESR_Gx4]: {
+        name: "RealES  Gx4",
         description: "Best for photos and realistic images",
         scale: 4,
         quality: "High",
         speed: "Medium",
         display_name:"Fox_REAL",
     },
-    [AIModel.REALESR_ANIMEX4]: {
+    [AIModel.RealESR_Animex4]: {
         name: "RealESRGAN Anime x4",
         description: "Specialized for anime and illustrations",
         scale: 4,
@@ -58,7 +58,7 @@ const AI_MODELS = {
         speed: "Medium",
         display_name:"Fox_ANIMEX4",
     },
-    [AIModel.BSRGANX2]: {
+    [AIModel.BSRGANx2]: {
         name: "BSRGAN x2",
         description: "Good balance for various content types",
         scale: 2,
@@ -66,7 +66,7 @@ const AI_MODELS = {
         speed: "Fast",
         display_name:"Fox_BALANCEX2",
     },
-    [AIModel.BSRGANX4]: {
+    [AIModel.BSRGANx4]: {
         name: "BSRGAN x4",
         description: "Good balance for various content types",
         scale: 4,
@@ -74,7 +74,7 @@ const AI_MODELS = {
         speed: "Fast",
         display_name:"FOX x4"
     },
-    [AIModel.IRCNN_LX1]: {
+    [AIModel.IRCNN_Lx1]: {
         name: "IRCNN_LX1",
         description: "Good balance x1",
         scale: 1,
@@ -82,14 +82,22 @@ const AI_MODELS = {
         speed: "Fast",
         display_name:"Fox_LX1",
     },
-    [AIModel.IRCNN_MX1]: {
+    [AIModel.IRCNN_Mx1]: {
         name: "IRCNN_MX1",
         description: "Good balance medium x1",
         scale: 1,
         quality: "Medium",
         speed: "Fast",
         display_name:"Fox_MX1",
-    }
+    },
+    [AIModel.RealESRGANx4]: {
+    name: "RealESRGAN x4",
+        description: "Best for photos and realistic images",
+        scale: 4,
+        quality: "High",
+        speed: "Medium",
+        display_name:"Fox_REAL",
+},
 };
 
 const EnhancementSettings: React.FC<EnhancementSettingsProps> = ({
@@ -108,7 +116,7 @@ const EnhancementSettings: React.FC<EnhancementSettingsProps> = ({
         multithreading: number;
         output_path: string | undefined;
     }>({
-        ai_model: AIModel.REALESR_GX4,
+        ai_model: AIModel.RealESR_Gx4,
         input_resize_factor: 1.0,
         output_resize_factor: 1.1,
         vram_limit: 4.0,
