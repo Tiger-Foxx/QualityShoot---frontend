@@ -2,6 +2,8 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const { spawn } = require('child_process');
 const path = require('path'); // Assurez-vous que path est importé
+const http = require('http');
+
 const isDev = !app.isPackaged;
 
 const fs = require('fs');
@@ -132,6 +134,23 @@ function createWindow() {
 
 
 }
+
+
+function shutdownBackend() {
+  const options = {
+    hostname: '127.0.0.1',
+    port: 8000,
+    path: '/shutdown-instant',
+    method: 'POST'
+  };
+  const req = http.request(options, res => {
+    // Optionnel: lire la réponse
+  });
+  req.on('error', error => {
+    // Peut échouer si le backend a déjà quitté, c'est OK
+  });
+  req.end();
+}
 ipcMain.handle('open-folder', async (event, folderPath) => {
   if (folderPath && typeof folderPath === "string") {
     await shell.openPath(folderPath);
@@ -140,6 +159,9 @@ ipcMain.handle('open-folder', async (event, folderPath) => {
 app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
+  try {
+    shutdownBackend();
+  } catch (e) {}
   if (pythonProcess) pythonProcess.kill();
   if (process.platform !== 'darwin') app.quit();
 });
