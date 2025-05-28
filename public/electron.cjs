@@ -104,6 +104,28 @@ function createWindow() {
     mainWindow.show();
   });
 
+  // Pour la prod, lance le backend seulement si on n'est PAS en dev :
+  if (!isDev) {
+
+    try {
+      // Chemin vers l'exe backend, à ajuster selon ton nom de build
+      const backendExe = path.join(__dirname, '..', 'backend', 'main.exe');
+      if (fs.existsSync(backendExe)) {
+        pythonProcess = spawn(backendExe, [], {
+          cwd: path.dirname(backendExe),
+          detached: false,
+          stdio: 'ignore'
+        });
+      }
+    }
+    catch (error) {
+      console.error('❌ [Electron] Erreur lors du lancement du backend:', error);
+      dialog.showErrorBox('Erreur de démarrage', 'Impossible de démarrer le backend. Veuillez vérifier les logs pour plus d\'informations.');
+    }
+
+  }
+
+
 
 }
 ipcMain.handle('open-folder', async (event, folderPath) => {
