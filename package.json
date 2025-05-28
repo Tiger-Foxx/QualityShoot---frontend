@@ -33,7 +33,8 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "QualityShoot",
-      "license": "public/EULA.txt"
+      "license": "public/EULA.txt",
+      "include": "public/installer.nsh"
     }
   },
   "homepage": "./",
