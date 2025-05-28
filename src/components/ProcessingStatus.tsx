@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Square, RotateCcw, CheckCircle, XCircle, Clock } from 'lucide-react';
 import Lottie from 'lottie-react';
-import foxLoader from '../assets/lotties/fox-loader.json';
+// import foxLoader from '../assets/lotties/fox-loader.json';
 import type { ProcessStatusResponse } from '../models';
 
 interface ProcessingStatusProps {
@@ -79,7 +79,7 @@ const ProcessingStatus: React.FC<ProcessingStatusProps> = ({
                 <div className="flex items-center justify-center mb-5 min-h-[80px]">
                     {isProcessing ? (
                         <div className="w-20 h-20">
-                            <Lottie animationData={foxLoader} loop={true} />
+                            <Lottie animationData={"/assets/lotties/fox-loader.json"} loop={true} />
                         </div>
                     ) : (
                         getStatusIcon(currentProcess.status)
