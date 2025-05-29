@@ -6,7 +6,12 @@
 
 Welcome to the **front end** of **QualityShoot** — the AI-powered image & video upscaler that brings your pixels back from the dead, crafted with love, TypeScript, and more than a few developer facepalms by [FOX](https://github.com/Tiger-Foxx).
 
----
+> **Citation : paper on which I based myself: https://arxiv.org/abs/2103.14006**
+> **Citation : Credits: http://www4.comp.polyu.edu.hk/%7Ecslzhang/paper/IRCNN_CVPR17.pdf**
+
+<p align="center">
+  <img src="screenshots/home.png" alt="home" width="600">
+</p>
 
 ## 🌟 Project Context & Philosophy
 
@@ -23,8 +28,9 @@ Just a smart, cross-platform, easy-to-use desktop app for everyone.
 - **Democratize high-quality upscaling**: Make advanced AI video/image enhancement accessible to non-techies and pros alike.
 - **Respect privacy**: Everything runs locally; your pictures of cats and embarrassing baby photos never leave your machine.
 - **Open Source Rules**: The entire codebase (front and back!) is available for learning, hacking, and contributing.
-
----
+<p align="center">
+  <img src="screenshots/upscale.png" alt="home" width="600">
+</p>
 
 ## 🏗️ The Role of This Repo
 
@@ -49,7 +55,9 @@ It handles all user interaction, file selection, progress tracking, and communic
 - **Simple settings** (output quality, formats, etc.)
 - **Easy updates** (if you want to rebuild or enhance)
 
----
+<p align="center">
+  <img src="screenshots/settings.png" alt="home" width="600">
+</p>
 
 ## 🤪 Development Peripeties, Oddities & Gotchas
 
