@@ -1,0 +1,50 @@
+QUALITYSHOOT - END USER LICENSE AGREEMENT (EULA)
+
+Welcome to QualityShoot, the AI-powered image and video upscaler, crafted with love (and a bit of coffee) by FOX.
+
+----------------------------------------
+1. OPEN SOURCE, OPEN MIND
+
+QualityShoot is an open source project.
+You can view, modify, fork, improve, and even (kindly) criticize the source code at:
+- https://github.com/theTigerFox/QualityShoot
+- https://site.the-fox.tech
+
+----------------------------------------
+2. WHAT YOU CAN DO
+
+- Use QualityShoot for all your images and videos, even those of your cat.
+- Share, distribute, and install on as many PCs as you like (even your grandma's).
+- Edit the code, contribute, report bugs, send pull requests, or just admire the code.
+- Give a star on GitHub (it always makes us happy).
+
+----------------------------------------
+3. WHAT YOU CANNOT DO
+
+- Sell QualityShoot without respecting the associated open source license (see GitHub for details).
+- Blame FOX if your computer accidentally upscales your childhood photos to 8K (no warranty, sorry!).
+
+----------------------------------------
+4. NO WARRANTY
+
+QualityShoot is provided "as is", with no warranties of any kind.
+If your cat becomes too beautiful after an upscale, you use this program at your own risk.
+FOX cannot be held responsible for overly sharp images or the mysterious disappearance of pixels.
+
+----------------------------------------
+5. THANKS
+
+Thank you for using this software.
+If you like QualityShoot, share it online, tell your friends, or say hi to FOX on Twitter/X: @theTigerFox
+
+----------------------------------------
+6. FINAL WORDS
+
+Launch, upscale, have fun.
+And remember: "With great resolution comes great responsibility!"
+
+----------------------------------------
+Author: FOX
+License: Open Source (see GitHub repo for details)
+Year: 2025
+----------------------------------------
