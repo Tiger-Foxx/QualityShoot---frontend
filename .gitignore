@@ -9,6 +9,7 @@ lerna-debug.log*
 *.dll
 *.exe
 *.onnx
+article.html
 
 node_modules
 dist
